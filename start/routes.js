@@ -25,11 +25,11 @@ Route.post('/signIn', 'UserController.signIn')
 
 Route.get('/list', 'UserController.index')
 
-Route.put('/update/:id', 'UserController.update')
+Route.put('/update/:id', 'UserController.update').middleware('auth')
 
-Route.delete('/list/:id', 'UserController.destroy')
+Route.delete('/list/:id', 'UserController.destroy').middleware('auth')
 
-
-Route.post('/employee/singin', 'UserController.employeeSignIn')
 Route.post('/login', 'UserController.login')
-Route.get('/employee/list', 'UserController.employeeList')
+
+Route.post('/employee/singin', 'EmployeeController.employeeSignIn').middleware('auth')
+Route.get('/employee/list', 'EmployeeController.index').middleware('auth')

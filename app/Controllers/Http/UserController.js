@@ -1,13 +1,13 @@
 'use strict'
 
 const User = use('App/Models/User');
-const Employee = use('App/Models/Employee');
+
 
 class UserController {
 
     async signIn({request, response, auth}){
-        const {username, password, email} = request.all();
         try {
+            const {username, password, email} = request.all();
             const user = await User.create({username, password, email} )
            
             return response.status(200).json({
@@ -25,8 +25,9 @@ class UserController {
     
     
     async update({request, response, params}){
-        const {username,email,role} = request.all();
+
         try {
+            const {username,email,role} = request.all();
             const user = await User.find(params.id)
             if(!user){
                 return response.status(404).send({
@@ -76,35 +77,21 @@ class UserController {
 //--------------------------------------------------------- FIM DO CRUD-----------------------------------------------
 
 
-    async login({request, response}){
-        
-        
-    }
+    async login({request, response, auth}){
+        try {
+            const{email, password} = request.all();
+            
+            const token = await auth.attempt(email, password);
 
-    async employeeSignIn({request, response}){
-        const data = request.only(['first_name','last_name','email','phone','phone2','function','salary','street','number','complement','role'])
-    
-        try{
-        const employee = await Employee.create(data)
+            return token;
 
-        return response.status(200).json({
-            status:'sucess',
-            message:'cadastro de '+ employee.first_name + ' realizado com sucesso!'
-        })
-        
         } catch (error) {
-            return response.status(400).json({
-                status: error,
-                message: 'Falha ao cadastrar, por favor tente novamente!'
-            })
+            return response.status(500).send({error:error})
         }
+        
     }
 
-    async employeeList({request, response}){
-
-
-
-    }
+  
 
 
 }
