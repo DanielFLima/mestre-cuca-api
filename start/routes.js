@@ -1,6 +1,8 @@
 'use strict'
 
+const ProductController = require('../app/Controllers/Http/ProductController')
 const UserController = require('../app/Controllers/Http/UserController')
+
 
 /*
 |--------------------------------------------------------------------------
@@ -19,11 +21,12 @@ const UserController = require('../app/Controllers/Http/UserController')
 const Route = use('Route')
 
 Route.get('/', () => {
-  return { greeting: 'Hello world in JSON' }
+  return { greeting: 'Restaurante Mestre Cuca ' }
 })
+
 Route.post('/signIn', 'UserController.signIn')
 
-Route.get('/list', 'UserController.index')
+Route.get('/list', 'UserController.index').middleware('auth')
 
 Route.put('/update/:id', 'UserController.update').middleware('auth')
 
@@ -31,5 +34,15 @@ Route.delete('/list/:id', 'UserController.destroy').middleware('auth')
 
 Route.post('/login', 'UserController.login')
 
-Route.post('/employee/singin', 'EmployeeController.employeeSignIn').middleware('auth')
+
+Route.post('/employee/login', 'UserController.login')
+
 Route.get('/employee/list', 'EmployeeController.index').middleware('auth')
+
+Route.get('/employee/:id', 'EmployeeController.findById').middleware('auth')
+
+Route.get('/employee', 'EmployeeController.findByName').middleware('auth')
+
+Route.post('/product/create', 'ProductController.create').middleware('auth')
+
+Route.get('/product/list', 'ProductController.index')

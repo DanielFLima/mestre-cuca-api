@@ -9,7 +9,7 @@ class RequestsSchema extends Schema {
       table.increments()
       table.integer('sale_id').unsigned().references('id').inTable('sales')
       table.integer('client_id').unsigned().references('id').inTable('customers')
-      table.integer('employee_id').unsigned().references('id').inTable('employees')
+      table.integer('user_id').unsigned().references('id').inTable('users')
       table.timestamps()
     })
   }

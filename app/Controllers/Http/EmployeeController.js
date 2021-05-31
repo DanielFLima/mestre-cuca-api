@@ -2,58 +2,60 @@
 
 
 const Employee = use('App/Models/Employee');
+const User = use('App/Models/User')
 const {validateAll} = use('Validator')
 
 class EmployeeController {
 
+//----------------------------------------------------------------------------
+ 
 
-    async employeeSignIn({request, response, auth}){
-        
-        const rules ={
-            first_name:'required',
-            last_name:'required',
-            phone:'required',
-            sector:'required',
-            salary:'required',
-            street:'required',
-            number:'required',
-            district:'required',
-
-        }
-        const validate = await validateAll(request.all(), rules);
-        if(validate.fails()){
-            return response.status(401).send({message:validate.messages()})
-        }
-        try{
-
-            const {id} = auth.user;
-            //const data = request.only(['first_name','last_name','email','phone','phone2','function','salary','street','number','district','complement','role'])
-            const {first_name, last_name, email, phone, phone2, sector, 
-                    salary, street, number, district, complement, role} = request.all();
-           
-           
-            const employee = await Employee.create({first_name, last_name, email, phone, phone2, sector, 
-                salary, street, number, district, complement, role, user_id:id});
-
-            return response.status(200).json({
-                status:'sucess',
-                message:'cadastro de '+ employee.first_name + ' realizado com sucesso!'
-        });
-        
+    async index({request, response, auth,params}){
+    
+        try {
+            const user = await User.query().where('role','LIKE',0).fetch()
+            return user
+            
         } catch (error) {
-            return response.status(400).json({
-                status: error,
-                message: 'Falha ao cadastrar, por favor tente novamente!'
-            });
+            response.status(404).send({
+                message:'Funcionários não encontrados!'
+            })
         }
+
     }
 
-    async index({request, response}){
-        //const employee = await Employee.all();
-        const employee = await Employee.query().with('user').fetch();
-        
-        return employee
+    async findById({request, response, auth,params}){
+        try {
+            const user = await User.find(params.id);
 
+            if(user.role == 0){
+                return user
+            }
+            return response.status(404).send({message:'Id de funcionário não encontrado!'})
+            //const user = await User.query().where('id','LIKE',id).fetch()
+
+            
+        } catch (error) {
+            return response.status(404).send({message:'Id de funcionário não encontrado!'})
+        }
+
+    }
+
+
+
+
+    async findUserName({request, response, auth,params}){
+        var first_name = request.input('first_name');
+        var user = await User.query().where('first_name','LIKE',first_name)
+        
+        if (user == undefined){
+            res.status(404);
+            res.json({err:"Nome não encontrado!"});
+
+        }else{
+            res.status(200);
+            res.json(user);
+        }
     }
 }
 
