@@ -33,7 +33,6 @@ class EmployeeController {
             }
             return response.status(404).send({message:'Id de funcionário não encontrado!'})
             //const user = await User.query().where('id','LIKE',id).fetch()
-
             
         } catch (error) {
             return response.status(404).send({message:'Id de funcionário não encontrado!'})
@@ -44,17 +43,19 @@ class EmployeeController {
 
 
 
-    async findUserName({request, response, auth,params}){
-        var first_name = request.input('first_name');
-        var user = await User.query().where('first_name','LIKE',first_name)
+    async findByName({request, response, auth,params}){
+        const first_name = request.input('first_name');
+        const user = await User.query().where('first_name','LIKE',`%${first_name}%`).fetch()
         
+        console.log(user)
+
         if (user == undefined){
-            res.status(404);
-            res.json({err:"Nome não encontrado!"});
+            response.status(404);
+            response.json({err:"Nome não encontrado!"});
 
         }else{
-            res.status(200);
-            res.json(user);
+            response.status(200);
+            response.json({user});
         }
     }
 }

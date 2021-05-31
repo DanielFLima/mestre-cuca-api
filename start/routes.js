@@ -35,6 +35,7 @@ Route.delete('/list/:id', 'UserController.destroy').middleware('auth')
 Route.post('/login', 'UserController.login')
 
 
+
 Route.post('/employee/login', 'UserController.login')
 
 Route.get('/employee/list', 'EmployeeController.index').middleware('auth')
@@ -42,6 +43,8 @@ Route.get('/employee/list', 'EmployeeController.index').middleware('auth')
 Route.get('/employee/:id', 'EmployeeController.findById').middleware('auth')
 
 Route.get('/employee', 'EmployeeController.findByName').middleware('auth')
+
+
 
 Route.post('/product/create', 'ProductController.create').middleware('auth')
 
